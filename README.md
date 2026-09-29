@@ -1,5 +1,8 @@
 # APEN
 
+> **GitHub snapshot reproducibility guard (2026-09-29).** The live GitHub tree at base commit `42f8917efc10019a693e7bf3a4faa8440a8ed055` contains only `README.md`; the package metadata, source tree, training script, and frozen protocol/status files referenced below are absent. The install/import/training/benchmark commands below are therefore not runnable from that snapshot. A verified repair patch is attached to this sprint; it adds a fail-closed repository-shape preflight and regression tests without changing experiment definitions.
+
+
 **APEN now uses the spatial-memory architecture previously named APENNext.**
 The normal `APEN` import, `main.py`, `scripts/train.py`, and `python -m apen`
 all use this version. It combines spatial residual forecasting, temporal history,
