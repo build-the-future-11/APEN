@@ -1,154 +1,46 @@
 # APEN
 
-**APEN now uses the spatial-memory architecture previously named APENNext.**
-The normal `APEN` import, `main.py`, `scripts/train.py`, and `python -m apen`
-all use this version. It combines spatial residual forecasting, temporal history,
-learnable episodic retrieval, and a validation-selected gated correction.
+APEN is a research line investigating episodic/spatial residual correction for forecasting systems.
 
-```sh
-python -m apen train --output runs_local/my-apen-run
-python -m apen verify runs_local/my-apen-run
-```
+## Current repository state
 
-See [APEN.md](APEN.md) for training, progress, checkpoint loading, and forecasting.
-The current [research draft](paper/apen_v2/README.md) describes the spatial-memory
-method and reports both its gains and its negative distribution-shift results.
-[STATUS.md](STATUS.md) separates execution results from research readiness.
-The source folder has no Git history. This is not a submission-ready project.
+This repository is currently an **evidence-boundary / status repository**, not a complete executable research package.
 
-The previous architecture is available as `models.legacy.apen.APEN`, with an
-unmodified source/evidence archive in `legacy/pre_apen_v2_2026-09-27/`.
-Its [negative research report](paper/APEN_FALSIFICATION_MANUSCRIPT.md) and
-[table](paper/current_burgers_table.md) remain historical evidence for that model;
-they do not measure this new architecture. The bundled Synthica portfolio is
-outside the APEN migration.
+At the current `main` revision, the repository contains only:
 
-## Historical research references
+- `README.md`
+- `FINAL_STATUS_2026-09-30.md`
 
-The references and protocols below describe the archived architecture unless
-explicitly marked APEN v2. See [REPRODUCE.md](REPRODUCE.md) for that distinction.
+The implementation, experiment scripts, paper source, audit files, datasets, checkpoints, result artifacts, and reproduction machinery referenced in earlier project history are **not present in this repository revision**. They therefore cannot be treated as locally verified artifacts of this repository.
 
-Deep-audit entry points: [repository map](audit/REPOSITORY_MAP.md),
-[mathematical specification](research/MATHEMATICAL_SPEC.md),
-[hypotheses](research/HYPOTHESES.md), [evidence ledger](EVIDENCE_LEDGER.md), and
-[conference-readiness checklist](audit/CONFERENCE_READINESS_CHECKLIST.md).
-The full implementation queue, including pseudocode/scaffolds, unsafe code,
-abstractions, additions, and execution order, is in
-[`audit/ULTIMATE_IMPLEMENTATION_CHECKLIST.md`](audit/ULTIMATE_IMPLEMENTATION_CHECKLIST.md).
+## Scientific status
 
-**Validity boundary (2026-09-08):** training previously supplied future-target
-salience to the prediction gate. The maintained path is now causal. Retained
-comparative APEN results are historical pre-fix development evidence until a
-new frozen comparison is executed; see `RESEARCH_TRUTH.md`.
+The maintained closeout record is `FINAL_STATUS_2026-09-30.md`.
 
-> **Evidence status:** read [`RESEARCH_TRUTH.md`](RESEARCH_TRUTH.md) before quoting benchmark or paper results. The current repository contains implemented experimental/statistical machinery and structural hotfixes, but its own status files state that the full multi-seed benchmark, baseline-table, OOD-scaling, and paper-grade final-metric program is not complete. The committed legacy benchmark report currently records failed cells, not successful paper results.
+Its present conclusion is:
 
-Global invariants:
+- the strong positive APEN-v2 claim is **not supported** by the currently documented evidence boundary;
+- reduced validation-selected Burgers comparisons recorded in the project history left APEN last and winning 0/3 fresh seeds;
+- historical/pre-repair evidence must not be pooled with repaired-valid evidence;
+- diagnostic or smoke-scale results must not be promoted into paper-scale evidence;
+- any new submission-grade positive claim requires a new, complete, valid, frozen experiment matrix.
 
-Tensor format: [B, T, C, *spatial]  
-Dtype: torch.float32  
-Device must be passed explicitly  
-No module may call .cuda() internally  
-All randomness must be controlled via set_seed  
+This repository therefore records a **negative / falsification-first closeout**, not a submission-ready positive paper.
 
-Install:
+## Reproducibility boundary
 
-```bash
-uv sync --locked --all-extras
-```
+There is currently no complete executable implementation on `main`, so commands, benchmark tables, figures, or manuscript claims from earlier working copies cannot be independently reproduced from this repository alone.
 
-Pip fallback:
+Do not claim that:
 
-```bash
-pip install -e '.[synthica-report,synthica-engineering,apen-plots,test]'
-```
+- APEN is submission-ready;
+- the full benchmark suite is present here;
+- the implementation has been independently reproduced from this repository;
+- historical results have been revalidated on the current architecture;
+- absent files or scripts are part of this revision.
 
-All scripts must run from project root.
+If the executable research package is restored later, it should be added with explicit provenance and a revision-linked evidence manifest before stronger reproducibility claims are made.
 
-Research checks:
+## Closeout rule
 
-```bash
-python3 scripts/preflight.py
-python3 scripts/verify_apen_artifact.py
-python3 scripts/verify_apen_physics_smoke.py
-ruff check analysis benchmarks data evaluation experiments.py models scripts synthica_foundry training utils tests
-PYTHONPATH=. pytest -q
-python3 -m synthica_foundry.cli build-research-packages
-```
-
-Paper-oriented smoke run:
-
-```bash
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_physics_smoke.py --output runs_local/apen-physics-smoke.json
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/paper_suite.py --smoke --run-baselines --seeds 61 --dataset burgers --device cpu
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_matched_benchmark.py
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_validation_selected_benchmark.py
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_matched_navier_stokes.py
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_matched_navier_stokes_v2.py
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_ablation_burgers.py
-
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/apen_ood_burgers.py
-
-python3 scripts/plot_apen_matched.py
-python3 scripts/plot_apen_ablation.py
-python3 scripts/plot_apen_ood.py
-OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
-  python3 scripts/profile_navier_compute.py
-python3 scripts/plot_navier_compute.py
-```
-
-The first command verifies real APEN training/evaluation against the Burgers,
-Kuramoto–Sivashinsky, and 2-D Navier–Stokes generators. The second verifies a
-small APEN/FNO/DeepONet workflow. Both are implementation smoke tests, not
-paper-scale performance evidence.
-
-The third command runs the reduced two-epoch Burgers v1 comparison. The fourth
-runs its locally frozen validation-selected extension: the same five models and
-2%-matched parameter capacities receive a common 20-epoch ceiling; best states
-are selected only by validation rollout MSE and the test split is evaluated
-once afterward. APEN remains last and wins zero of three fresh seeds. The next
-two commands cover the reduced APEN/FNO2d/ResNet2d Navier–Stokes comparison,
-followed by RNG-paired component ablations and generated Burgers viscosity
-shifts. These grids and data budgets remain too small for a general superiority
-or application claim.
-
-The compute profiler launches each 2-D model in a fresh process and records
-PyTorch-counted FLOPs, latency, and process RSS. The FLOP count is explicitly
-bounded because FFT and custom operations may be omitted; latency and RSS are
-host-specific and excluded from its deterministic signature.
-
-The older Navier–Stokes, ablation, OOD, and fixed-epoch comparison numbers above
-are historical pre-repair evidence. Their conclusions must not be attributed to
-the repaired implementation. New diagnostic replays have separate dated paths
-and are classified in `ASTRA_FINAL_REPORT.md`.
-
-The portfolio research-package command materializes evidence-bounded packages
-for all 64 canonical ideas under `research/projects/`. It deliberately reports
-zero submission-ready standalone projects: most entries remain operational
-proxies, and the APEN flagship has negative matched-baseline and mechanism
-evidence. The APEN literature synthesis includes FNO, DeepONet, Adaptive
-Computation Time, and the ICLR 2025 Memory Neural Operator paper.
-
-The default APEN objective combines prediction error with spectral, gradient, Laplacian, fractional Sobolev, Haar-Besov multiscale, empirical Wasserstein, cumulant, gate, memory, and consolidation terms. The analysis pipeline implements paired ablation statistics with bootstrap intervals, sign-flip permutation tests, Wilcoxon tests, t-tests, Hedges g, Holm correction, and a readiness audit.
-
-Those implemented analyses become scientific evidence only when they are run on a complete valid frozen experiment matrix with retained provenance. See `STATUS.md`, `HOTFIX_STATUS.json`, and `RESEARCH_TRUTH.md` for the current execution boundary.
-
-Maintained training and evaluation paths fail closed on non-finite tensors and empty
-loaders. They do not replace NaN/Inf predictions with finite numbers, because that
-would make a failed run look measurable. Checkpoint loading accepts only regular,
-non-symlink files and uses PyTorch's restricted weights-only loader.
-# APEN
+Preserve the negative result honestly. A successor study may test a materially revised hypothesis, but it should be treated as a new study with its own protocol, evidence, and conclusion rather than as a rewrite of this closeout.
