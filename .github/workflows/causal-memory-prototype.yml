@@ -5,6 +5,7 @@ on:
     paths:
       - "apen_event_residual/**"
       - "tests/test_memory.py"
+      - "tests/test_memory_v2.py"
       - "pyproject.toml"
       - ".github/workflows/causal-memory-prototype.yml"
 
@@ -27,6 +28,6 @@ jobs:
       - name: Install prospective prototype
         run: python -m pip install -e ".[dev]"
       - name: Test only causal-memory engineering contracts
-        run: python -m pytest -q tests/test_memory.py
+        run: python -m pytest -q tests/test_memory.py tests/test_memory_v2.py
       - name: Explicit scientific scope
         run: echo "No protected APEN experiment or historical negative study is reopened."
