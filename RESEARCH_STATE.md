@@ -32,3 +32,31 @@ Therefore the public repository is **not a reproducible release of the implement
 
 ## Terminal disposition
 **NEGATIVE — scientific claim resolved; reproducible release incomplete.**
+
+## Prospective event-order V2 — 10 October 2026
+
+The earlier repository-state paragraphs retain their historical scope. This
+branch extends PR4
+`de1ba1217d3d78e2790840fcfe5c8b1697056457` with a separate prospective control;
+it is not the recovered canonical APEN source or a scientific release.
+
+The legacy bounded bank could change a tick 2 forecast from 12 to 10 after tick 10
+ingestion evicted its old record. The new explicit
+`apen_event_residual.causal_memory_v2.EpisodicResidualMemoryV2` rejects backward
+queries and backdated ingestion, and requires all predictions at a tick to
+precede ingestion at that tick. Historical values require replay into fresh
+memory. The legacy source and nine original tests remain byte-identical.
+
+Local verification: 14 standard-library unittest cases passed in 0.006 seconds
+with exact preserved legacy source; Python 3.12.14, NumPy 2.3.5.
+The original nine pytest cases were not run locally because pytest is unavailable.
+The safe prototype workflow now runs both original and new tests. Its hosted
+acceptance is pending at this initial source commit and is recorded in the draft
+PR description after completion. Independent parent source review found no
+scoped blocker.
+
+Contract: `research/EVENT_ORDERING_V2_20261010.md`.
+Source-bound receipt: `research/verification/event_ordering_v2_20261010/receipt.json`.
+All earlier negative conclusions, source-provenance gaps, frozen endpoints and
+scientific holds remain. Next action: hosted ordinary engineering verification,
+then review this opt-in draft before adoption; no outcome-bearing study follows.
