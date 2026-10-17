@@ -98,7 +98,13 @@ class EpisodicResidualMemory:
             raise ValueError('nonfinite context distance')
         distances.sort(key=lambda x: (x[0], x[1], x[2]))
         chosen = distances[:self.top_k]
-        weights = np.asarray([1.0 / max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
+        # Cancel a common inverse-distance factor before normalization. Taking
+        # reciprocals first can overflow, or their sum can overflow to infinity
+        # and silently erase a finite residual correction. Relative weights are
+        # bounded by one and at least one is exactly one.
+        denominators = np.asarray([max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
+        with np.errstate(under='ignore'):
+            weights = denominators.min() / denominators
         weights /= weights.sum()
         learned_residual = float(weights @ np.asarray([r.residual for _, _, _, r in chosen]))
         amount = self.gain * learned_residual

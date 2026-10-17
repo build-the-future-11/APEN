@@ -1,0 +1,73 @@
+{
+  "schema_version": "apen-event-order-v2-engineering-receipt-v1",
+  "session": "apen-causal-event-order-v2-20261010",
+  "created_at": "2026-10-10T17:27:53.599837+00:00",
+  "repository": "build-the-future-11/APEN",
+  "base_commit": "de1ba1217d3d78e2790840fcfe5c8b1697056457",
+  "source_files": {
+    "apen_event_residual/causal_memory_v2.py": {
+      "sha256": "1a2f1042395e1094719091cd119fffaf970d204d29debcf4ea433c77e0781134",
+      "git_blob": "cc31eccb5fdfbba4893e1e624733f16458c2a39a"
+    },
+    "tests/test_memory_v2.py": {
+      "sha256": "ad278b0688a86924414560e29a18ec732a9de42949f3249cef9dda16f454e70a",
+      "git_blob": "f35857de3e78732a20dd98f5cb6a683685468769"
+    },
+    "research/EVENT_ORDERING_V2_20261010.md": {
+      "sha256": "a4d0fca35525138648f77aad9aaaba48f0ae8486862e2c3cac87a915e8001d7f",
+      "git_blob": "52f2b821477b1fa3230bfafc2cff92da6c86261d"
+    },
+    ".github/workflows/causal-memory-prototype.yml": {
+      "sha256": "0a4c94ff70cbeac37fcaa2234fe93a60e5885211a92ae7234f8c8e8a9acf1073",
+      "git_blob": "44e3b0bf216d2ec59f0c631c6bd168f9cb09c0c3"
+    }
+  },
+  "preserved_legacy_source_git_blob": "334c28f7fa0b378b65c75e0d558ac105d057d5a5",
+  "preserved_original_tests_git_blob": "c705a901071af3e5e1240365b6c5870ad2564e79",
+  "reproduced_witness": {
+    "capacity": 1,
+    "gain": 1.0,
+    "baseline": 10.0,
+    "forecast_time": 2,
+    "first_residual": 2.0,
+    "first_available_and_observed_at": 1,
+    "before_future_ingestion": 12.0,
+    "future_residual": 100.0,
+    "future_available_and_observed_at": 10,
+    "same_forecast_after_future_ingestion": 10.0
+  },
+  "local_verification": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "command": "python -m unittest discover -s tests -p test_memory_v2.py -v",
+    "exit_code": 0,
+    "passed": 14,
+    "failed": 0,
+    "test_report_seconds": 0.006,
+    "command_wall_seconds": 0.238905438,
+    "raw_stdout_retained": false,
+    "output_evidence": "Tool-captured output reported each of the 14 tests ok and Ran 14 tests in 0.006s / OK; exact original raw stream was not written to a file.",
+    "original_nine_pytest_cases_run_locally": false,
+    "syntax_parse": "passed"
+  },
+  "independent_source_review": {
+    "status": "No scoped blocker",
+    "reviewer": "Parent agent",
+    "finding": "Forward-only contract checks precede mutation, valid chronological behavior is preserved, and same-tick ingestion closes the prediction phase. Rejects historical access rather than reconstructing evicted history.",
+    "additional_test_execution": false
+  },
+  "hosted_verification": {
+    "status": "PENDING"
+  },
+  "scientific_boundary": {
+    "prior_APEN_negative_result": "unchanged",
+    "historical_frozen_sources_and_outcomes": "unchanged",
+    "prototype_only": true,
+    "scientific_runs": 0,
+    "protected_outcome_access": false,
+    "paid_compute": 0,
+    "main_merged": false,
+    "release_or_submission": false
+  },
+  "next_action": "Verify all 9 original and 14 new cases in existing ordinary prototype CI; retain exact accepted source head as an unmerged draft."
+}
