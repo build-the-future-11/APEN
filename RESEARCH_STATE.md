@@ -60,3 +60,14 @@ Source-bound receipt: `research/verification/event_ordering_v2_20261010/receipt.
 All earlier negative conclusions, source-provenance gaps, frozen endpoints and
 scientific holds remain. Next action: hosted ordinary engineering verification,
 then review this opt-in draft before adoption; no outcome-bearing study follows.
+
+### Engineering arithmetic correction — 17 October 2026
+
+Package 0.1.1 repairs inverse-distance weight normalization in the shared V1/V2
+prototype implementation. See
+[`research/WEIGHT_NORMALIZATION_FIX_20261017.md`](research/WEIGHT_NORMALIZATION_FIX_20261017.md)
+for the reproduced failure, compatibility boundary, and 26-test local acceptance.
+The earlier V1/V2 source-preservation and verification statements describe their
+recorded October 10 commits. They do not assert byte equality with this later
+arithmetic correction. Historical scientific evidence and conclusions remain
+unchanged; no outcome-bearing study is opened.

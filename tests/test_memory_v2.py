@@ -1,5 +1,8 @@
 """Artificial chronological stream regressions; no scientific data or outcomes."""
 import unittest
+from decimal import Decimal, localcontext
+
+import numpy as np
 
 from apen_event_residual.causal_memory_v2 import EpisodicResidualMemoryV2
 from apen_event_residual.memory import EpisodicResidualMemory
@@ -139,6 +142,48 @@ class ChronologicalMemoryTests(unittest.TestCase):
         replay = _memory()
         _observe(replay, 1)
         self.assertEqual(historical, _predict(replay, 2))
+
+
+class ResidualWeightNormalizationTests(unittest.TestCase):
+    def test_equal_neighbours_keep_their_mean_across_epsilon_range(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for eps in (1e-8, 1e-308, float(np.nextafter(0., 1.)), np.finfo(float).max):
+                with self.subTest(memory=cls.__name__, eps=eps):
+                    memory = cls(key_dim=1, capacity=2, top_k=2, gain=1., eps=eps)
+                    for residual in (2., 4.):
+                        _observe(memory, 0, residual=residual)
+                    with np.errstate(all='raise'):
+                        result = _predict(memory, 1)
+                    self.assertEqual(result.corrected, 13.)
+                    self.assertEqual(result.residual_correction, 3.)
+                    self.assertEqual(result.used_entries, 2)
+
+    def test_unequal_neighbours_match_independent_decimal_inverse_distance_mean(self):
+        with localcontext() as context:
+            context.prec = 80
+            weights = [Decimal(1) / Decimal(distance) for distance in (1, 2, 4)]
+            expected = float(sum(weight * Decimal(residual)
+                                 for weight, residual in zip(weights, (-2, 4, 9)))
+                             / sum(weights))
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            memory = cls(key_dim=1, capacity=3, top_k=3, gain=1.)
+            for distance, residual in zip((1., 2., 4.), (-2., 4., 9.)):
+                memory.observe(key=[distance], residual=residual,
+                               available_at=0, observed_at=0)
+            with np.errstate(all='raise'):
+                result = memory.predict(key=[0.], baseline=0., at_time=1)
+            self.assertAlmostEqual(result.corrected, expected, places=14)
+
+    def test_unrepresentable_tiny_relative_weight_does_not_erase_nearest_neighbour(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            memory = cls(key_dim=1, capacity=2, top_k=2, gain=1.,
+                         eps=float(np.nextafter(0., 1.)))
+            memory.observe(key=[0.], residual=2., available_at=0, observed_at=0)
+            memory.observe(key=[1e100], residual=4., available_at=0, observed_at=0)
+            with np.errstate(all='raise'):
+                result = _predict(memory, 1)
+            self.assertEqual(result.corrected, 12.)
+            self.assertEqual(result.residual_correction, 2.)
 
 
 if __name__ == '__main__':
