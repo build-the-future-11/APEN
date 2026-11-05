@@ -186,5 +186,89 @@ class ResidualWeightNormalizationTests(unittest.TestCase):
             self.assertEqual(result.residual_correction, 2.)
 
 
+class ContextDistanceTests(unittest.TestCase):
+    def test_nearest_neighbour_is_not_changed_by_distance_underflow_or_overflow(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for scale in (1e-200, 1., 1e200):
+                with self.subTest(memory=cls.__name__, scale=scale):
+                    memory = cls(key_dim=2, capacity=2, top_k=1, gain=1.)
+                    # Insert the farther point first: a false zero-distance tie
+                    # would return its residual instead of the nearer one's.
+                    memory.observe(key=[0., 2 * scale], residual=90.,
+                                   available_at=0, observed_at=0)
+                    memory.observe(key=[scale, 0.], residual=3.,
+                                   available_at=0, observed_at=0)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0., 0.], baseline=10., at_time=1)
+                    self.assertEqual(result.corrected, 13.)
+                    self.assertEqual(result.eligible_entries, 2)
+                    self.assertEqual(result.used_entries, 1)
+
+    def test_small_and_large_vector_distances_match_independent_decimal_weights(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for scale in (1e-200, 1e200):
+                with self.subTest(memory=cls.__name__, scale=scale):
+                    keys = [[3 * scale, 4 * scale], [5 * scale, 12 * scale]]
+                    residuals = [-2., 9.]
+                    # Decimal computes distances from the actual float inputs,
+                    # without borrowing the implementation's norm or weights.
+                    with localcontext() as context:
+                        context.prec = 100
+                        distances = [sum(Decimal.from_float(x) ** 2 for x in key).sqrt()
+                                     for key in keys]
+                        weights = [1 / distance for distance in distances]
+                        expected = float(sum(w * Decimal.from_float(r)
+                                             for w, r in zip(weights, residuals))
+                                         / sum(weights))
+                    memory = cls(key_dim=2, capacity=2, top_k=2, gain=1., eps=1e-300)
+                    for key, residual in zip(keys, residuals):
+                        memory.observe(key=key, residual=residual,
+                                       available_at=0, observed_at=0)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0., 0.], baseline=0., at_time=1)
+                    self.assertAlmostEqual(result.corrected, expected, places=13)
+
+    def test_subnormal_separation_preserves_nearest_neighbour(self):
+        smallest = float.fromhex('0x0.0000000000001p-1022')
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            with self.subTest(memory=cls.__name__):
+                memory = cls(key_dim=1, capacity=2, top_k=1, gain=1., eps=smallest)
+                memory.observe(key=[2 * smallest], residual=90.,
+                               available_at=0, observed_at=0)
+                memory.observe(key=[smallest], residual=3.,
+                               available_at=0, observed_at=0)
+                with np.errstate(all='raise'):
+                    result = memory.predict(key=[0.], baseline=10., at_time=1)
+                self.assertEqual(result.corrected, 13.)
+
+    def test_true_distance_ties_keep_availability_then_insertion_priority(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for scale in (1e-200, 1e200):
+                with self.subTest(memory=cls.__name__, scale=scale):
+                    memory = cls(key_dim=2, capacity=3, top_k=1, gain=1.)
+                    for residual, available in ((90., 1), (3., 0), (50., 0)):
+                        memory.observe(key=[3 * scale, 4 * scale], residual=residual,
+                                       available_at=available, observed_at=1)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0., 0.], baseline=10., at_time=2)
+                    self.assertEqual(result.corrected, 13.)
+                    self.assertEqual(result.max_retrieved_available_at, 0)
+
+    def test_unrepresentable_distance_is_rejected_without_advancing_clock(self):
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            with self.subTest(memory=cls.__name__):
+                memory = cls(key_dim=2, capacity=1, top_k=1, gain=1.)
+                key = [1.7e308, 1.7e308]
+                memory.observe(key=key, residual=3., available_at=0, observed_at=0)
+                memory.predict(key=key, baseline=10., at_time=1)
+                with np.errstate(all='raise'):
+                    with self.assertRaisesRegex(ValueError, 'nonfinite context distance'):
+                        memory.predict(key=[0., 0.], baseline=10., at_time=10)
+                self.assertEqual(memory.size, 1)
+                if isinstance(memory, EpisodicResidualMemoryV2):
+                    self.assertEqual(memory.last_prediction_at, 1)
+                self.assertEqual(memory.predict(key=key, baseline=10., at_time=2).corrected, 13.)
+
+
 if __name__ == '__main__':
     unittest.main()

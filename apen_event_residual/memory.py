@@ -8,6 +8,7 @@ not been evaluated on any scientific dataset or protected benchmark.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import dist
 import numpy as np
 
 
@@ -91,8 +92,10 @@ class EpisodicResidualMemory:
         eligible = [r for r in self._records if r.available_at < t and r.observed_at < t]
         if not eligible:
             return Correction(float(baseline), float(baseline), 0.0, 0, 0, None)
-        # Deterministic nearest-neighbor selection, including equal-distance ties.
-        distances = [(float(np.linalg.norm(query - r.key)), r.available_at, r.insertion, r)
+        # A scaled Euclidean norm preserves finite very large distances and
+        # avoids turning tiny nonzero distances into false nearest-neighbor ties.
+        # Equal distances still use availability time and insertion order.
+        distances = [(dist(query, r.key), r.available_at, r.insertion, r)
                      for r in eligible]
         if not all(np.isfinite(d) for d, _, _, _ in distances):
             raise ValueError('nonfinite context distance')
