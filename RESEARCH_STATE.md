@@ -71,3 +71,17 @@ The earlier V1/V2 source-preservation and verification statements describe their
 recorded October 10 commits. They do not assert byte equality with this later
 arithmetic correction. Historical scientific evidence and conclusions remain
 unchanged; no outcome-bearing study is opened.
+
+### Context-distance arithmetic correction — 5 November 2026
+
+The prospective prototype now uses a scaled Euclidean distance to prevent
+squaring underflow from turning distinct neighbours into false ties and
+squaring overflow from rejecting representable distances. The README now
+describes the prototype files already present instead of saying that the
+repository contains only two status files. This does not restore the historical
+forecasting implementation.
+
+The source correction and independent regression evidence are documented in
+[`research/DISTANCE_SCALING_FIX_20261105.md`](research/DISTANCE_SCALING_FIX_20261105.md).
+The entire local engineering suite passed: 31 tests and 26 subtests. Existing
+scientific conclusions, evidence records and experiment holds are unchanged.
