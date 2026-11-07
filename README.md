@@ -86,6 +86,9 @@ Engineering tests cover timestamp admission, FIFO capacity, copied keys,
 chronological ordering, deterministic distance ties, and numerical weighting.
 They use artificial fixtures and provide no evidence of forecasting benefit.
 
+For the exact source/evidence boundary as of 7 November 2026 and the separate
+scientific publication gate, see [repository evidence boundary](research/REPOSITORY_BOUNDARY_20261107.md).
+
 ## Closeout rule
 
 Preserve the negative result honestly. A successor study may test a materially revised hypothesis, but it should be treated as a new study with its own protocol, evidence, and conclusion rather than as a rewrite of this closeout.

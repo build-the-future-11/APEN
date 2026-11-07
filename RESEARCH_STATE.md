@@ -9,11 +9,11 @@ The current APEN line should be treated as a **NEGATIVE** result with respect to
 The retained manuscript history contains small improvements over a frozen base, but the strongest equal-update control favored continued base training. The current repository status further records that the repaired/current APEN comparison is not submission-ready and that reduced validation-selected comparisons do not support superiority.
 
 ## Repository/release state
-The public default branch currently contains only `README.md` and `FINAL_STATUS_2026-09-30.md`.
+Historical snapshot (superseded by the 7 November 2026 inventory): the public default branch formerly contained only `README.md` and `FINAL_STATUS_2026-09-30.md`.
 
-The README references paths and commands including `APEN.md`, `STATUS.md`, `RESEARCH_TRUTH.md`, `REPRODUCE.md`, `scripts/preflight.py`, and `paper/apen_v2/README.md`, but those paths are absent from the current default branch.
+The older README referenced paths including `APEN.md`, `STATUS.md`, `RESEARCH_TRUTH.md`, `REPRODUCE.md`, `scripts/preflight.py`, and `paper/apen_v2/README.md`. Those historical paths remain unverified as a complete spatial-PDE scientific release. The separate `apen_event_residual/`, `tests/`, and `research/` materials are a prospective engineering prototype, not recovery of that paper's source/evidence. See `research/REPOSITORY_BOUNDARY_20261107.md`.
 
-Therefore the public repository is **not a reproducible release of the implementation described by its README**.
+Therefore the public repository is **not a reproducible release of the original spatial-PDE APEN experiments**, despite the separately documented prototype and tests.
 
 ## Evidence boundary
 - Historical/pre-repair evidence must remain separate from repaired-valid evidence.

@@ -12,10 +12,10 @@ A falsification-first record that separates historical/pre-repair evidence from 
 ## Evidence
 - Current repository status states the repaired/current line is negative / not submission-ready.
 - Historical manuscript evidence includes small frozen-base gains but a failed equal-update primary endpoint.
-- The current public default branch does not contain the implementation, scripts, status files, or paper paths referenced by its README.
+- The public branch now contains a prospective event-residual prototype and engineering tests, but not the complete original spatial-PDE implementation, raw benchmark evidence or paper source. The earlier two-file inventory is superseded; see `research/REPOSITORY_BOUNDARY_20261107.md`.
 
 ## Primary Result
-The strong APEN superiority claim is not supported. The scientific line is negative; the public release is not reproducible from the current default branch.
+The strong APEN superiority claim is not supported. The original spatial-PDE scientific line remains negative; a full reproduction of its experimental evidence is not available from the current default branch. The prospective event-residual prototype is separate.
 
 ## Disposition
 **NEGATIVE**
@@ -30,7 +30,7 @@ Canonical current source and raw artifact binding are incomplete in the public r
 Do not treat the README commands as reproducible until the canonical source tree is restored and bound to the current evidence.
 
 ## Artifacts
-Current public branch: `README.md`, `FINAL_STATUS_2026-09-30.md`.
+Current public branch also includes `RESEARCH_STATE.md`, this manifest, `pyproject.toml`, `apen_event_residual/`, `research/`, `tests/` and `.github/`. This is not the complete original spatial-PDE artifact set.
 
 ## Integrity
 Do not pool historical/pre-fix rows with repaired-valid evidence. Do not rerun a frozen endpoint to seek a favorable result.
