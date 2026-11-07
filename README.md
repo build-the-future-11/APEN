@@ -6,12 +6,9 @@ APEN is a research line investigating episodic/spatial residual correction for f
 
 This repository is currently an **evidence-boundary / status repository**, not a complete executable research package.
 
-At the current `main` revision, the repository contains only:
+At the **7 November 2026** default-branch review, this repository includes the root status documents, `pyproject.toml`, `apen_event_residual/` (an explicitly **prospective event-residual prototype**), `tests/`, `research/`, and `.github/`. The older two-file inventory described an earlier repository state and is no longer current.
 
-- `README.md`
-- `FINAL_STATUS_2026-09-30.md`
-
-The implementation, experiment scripts, paper source, audit files, datasets, checkpoints, result artifacts, and reproduction machinery referenced in earlier project history are **not present in this repository revision**. They therefore cannot be treated as locally verified artifacts of this repository.
+**Crucial distinction:** The prospective prototype is **not** the restored original APEN/APEN-v2 spatial-PDE research implementation, benchmark suite, manuscript source, or bound raw result package. Its tests and dated engineering receipts do not establish a spatial-forecasting advantage. The original scientific conclusions and unadmitted evidence remain unchanged. See [`research/REPOSITORY_BOUNDARY_20261107.md`](research/REPOSITORY_BOUNDARY_20261107.md).
 
 ## Scientific status
 
@@ -29,12 +26,12 @@ This repository therefore records a **negative / falsification-first closeout**,
 
 ## Reproducibility boundary
 
-There is currently no complete executable implementation on `main`, so commands, benchmark tables, figures, or manuscript claims from earlier working copies cannot be independently reproduced from this repository alone.
+There is currently no **complete executable implementation and bound experimental evidence for the original spatial-PDE APEN study** on `main`. The separate prospective event-residual prototype is available as source, but it cannot reproduce the original paper's benchmark tables, figures or claims.
 
 Do not claim that:
 
 - APEN is submission-ready;
-- the full benchmark suite is present here;
+- the original spatial-PDE full benchmark suite is present here;
 - the implementation has been independently reproduced from this repository;
 - historical results have been revalidated on the current architecture;
 - absent files or scripts are part of this revision.
