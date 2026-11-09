@@ -8,7 +8,7 @@ not been evaluated on any scientific dataset or protected benchmark.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import dist
+from math import dist, fsum
 import numpy as np
 
 
@@ -108,8 +108,18 @@ class EpisodicResidualMemory:
         denominators = np.asarray([max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
         with np.errstate(under='ignore'):
             weights = denominators.min() / denominators
-        weights /= weights.sum()
-        learned_residual = float(weights @ np.asarray([r.residual for _, _, _, r in chosen]))
+        # A convex average is finite for finite residuals, but a direct dot
+        # product can overflow while adding terms near float64's maximum or
+        # erase a small contribution between opposite large terms. Scale the
+        # residuals before accurate summation, then restore their common scale.
+        # Keep weights unnormalized until after summation: their sum is positive,
+        # and every scaled numerator term has magnitude at most its weight.
+        residuals = [r.residual for _, _, _, r in chosen]
+        residual_scale = max(abs(r) for r in residuals)
+        learned_residual = 0.0 if residual_scale == 0.0 else (
+            fsum(float(w) * (r / residual_scale) for w, r in zip(weights, residuals))
+            / fsum(map(float, weights)) * residual_scale
+        )
         amount = self.gain * learned_residual
         prediction = float(baseline) + amount
         if not np.isfinite(prediction):
