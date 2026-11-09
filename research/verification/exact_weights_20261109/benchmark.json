@@ -1,0 +1,157 @@
+{
+  "scope": "local artificial-input engineering timing; not a scientific efficacy result",
+  "reference_commit": "59bd5dfbe96980d3f4f365b604fec2b88b8caf6a",
+  "source_sha256": {
+    "parent": "adea226442b965d7bac2846e673438cb3f8527b11c767ef3269607e043116f25",
+    "candidate": "cf67e1229a60a13276b10c5beb4ec5ac6ebd2c988bb45573d6146faa1e57248e"
+  },
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+    "processor": "x86_64"
+  },
+  "warmup_predictions_per_case_and_implementation": 10,
+  "order": "alternating parent/candidate across seven batches",
+  "seed": 92742,
+  "records": [
+    {
+      "capacity": 32,
+      "top_k": 4,
+      "key_dim": 8,
+      "iterations_per_batch": 120,
+      "batches": 7,
+      "microseconds_per_prediction": {
+        "parent": [
+          132.25376666666665,
+          107.67760000000001,
+          94.01959166666666,
+          96.27330833333333,
+          106.95364166666667,
+          121.0737,
+          110.05003333333335
+        ],
+        "candidate": [
+          129.46725,
+          114.71796666666665,
+          92.79984166666667,
+          90.769375,
+          120.67843333333333,
+          115.87918333333333,
+          96.84534166666666
+        ]
+      },
+      "median_microseconds": {
+        "parent": 107.67760000000001,
+        "candidate": 114.71796666666665
+      },
+      "candidate_over_parent": 1.065383762887236,
+      "absolute_output_difference": 0.0
+    },
+    {
+      "capacity": 32,
+      "top_k": 32,
+      "key_dim": 8,
+      "iterations_per_batch": 40,
+      "batches": 7,
+      "microseconds_per_prediction": {
+        "parent": [
+          322.659325,
+          372.85575,
+          331.451175,
+          300.43129999999996,
+          349.49170000000004,
+          279.390625,
+          273.43405
+        ],
+        "candidate": [
+          339.851575,
+          320.193125,
+          308.7865,
+          317.71465,
+          445.611775,
+          410.938875,
+          316.03565000000003
+        ]
+      },
+      "median_microseconds": {
+        "parent": 322.659325,
+        "candidate": 320.193125
+      },
+      "candidate_over_parent": 0.9923566442717873,
+      "absolute_output_difference": 0.0
+    },
+    {
+      "capacity": 128,
+      "top_k": 128,
+      "key_dim": 8,
+      "iterations_per_batch": 8,
+      "batches": 7,
+      "microseconds_per_prediction": {
+        "parent": [
+          1228.112375,
+          1332.792375,
+          1109.5045,
+          1113.68275,
+          1449.404,
+          1155.9125,
+          1218.8485
+        ],
+        "candidate": [
+          2186.773,
+          2236.71575,
+          2416.00225,
+          2397.558875,
+          3163.911,
+          3494.992875,
+          2675.008625
+        ]
+      },
+      "median_microseconds": {
+        "parent": 1218.8485,
+        "candidate": 2416.00225
+      },
+      "candidate_over_parent": 1.982200618042357,
+      "absolute_output_difference": 0.0
+    },
+    {
+      "capacity": 256,
+      "top_k": 32,
+      "key_dim": 8,
+      "iterations_per_batch": 20,
+      "batches": 7,
+      "microseconds_per_prediction": {
+        "parent": [
+          759.3592,
+          802.1105500000001,
+          761.92155,
+          872.13335,
+          790.53015,
+          867.7543000000001,
+          856.36515
+        ],
+        "candidate": [
+          847.7402,
+          858.8914,
+          801.01735,
+          824.0145,
+          889.47695,
+          831.19825,
+          832.3074499999999
+        ]
+      },
+      "median_microseconds": {
+        "parent": 802.1105500000001,
+        "candidate": 832.3074499999999
+      },
+      "candidate_over_parent": 1.0376468056678718,
+      "absolute_output_difference": 0.0
+    }
+  ],
+  "limits": [
+    "Single machine and one local run; medians are descriptive.",
+    "Repeated query per bank; not training or live-stream throughput.",
+    "No claimed upper bound for arbitrary top_k or adversarial denominators.",
+    "Gain multiplication, distance and baseline addition remain float arithmetic."
+  ]
+}

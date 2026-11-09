@@ -102,21 +102,16 @@ class EpisodicResidualMemory:
             raise ValueError('nonfinite context distance')
         distances.sort(key=lambda x: (x[0], x[1], x[2]))
         chosen = distances[:self.top_k]
-        # Cancel a common inverse-distance factor before normalization. Taking
-        # reciprocals first can overflow, or their sum can overflow to infinity
-        # and silently erase a finite residual correction. Relative weights are
-        # bounded by one and at least one is exactly one.
-        denominators = np.asarray([max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
-        with np.errstate(under='ignore'):
-            weights = denominators.min() / denominators
-        # Accumulate the already-rounded relative weights and finite residuals
-        # as exact binary rationals, then round their mean once to float. A
-        # direct dot can overflow on a finite convex mean; global scaling can
-        # instead erase a representable small term or let a zero-weight outlier
-        # erase the whole mean. This bounded bank trades extra CPU arithmetic
-        # for stable accumulation. The earlier weight-division rounding remains.
-        weighted = [(Fraction.from_float(float(w)), Fraction.from_float(r.residual))
-                    for w, (_, _, _, r) in zip(weights, chosen) if w > 0.0]
+        # Form inverse-distance weights as exact rational reciprocals of the
+        # admitted float distances. Float reciprocals can overflow; even the
+        # bounded ratio min(distance)/distance can underflow to zero before a
+        # large residual makes its contribution representable. Preserve those
+        # contributions, cancellation and finite convex means, then round the
+        # mean once. Distances, gain multiplication and baseline addition still
+        # use float arithmetic. Rational denominators add CPU cost as top_k grows.
+        weighted = [(1 / Fraction.from_float(max(d, self.eps)),
+                     Fraction.from_float(r.residual))
+                    for d, _, _, r in chosen]
         denominator = sum(w for w, _ in weighted)
         numerator = sum(w * r for w, r in weighted)
         learned_residual = float(numerator / denominator)
@@ -130,3 +125,4 @@ class EpisodicResidualMemory:
     @property
     def size(self) -> int:
         return len(self._records)
+

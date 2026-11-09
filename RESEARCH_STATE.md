@@ -126,3 +126,43 @@ substantial shared-host noise and do not establish a speedup or acceptance targe
 The unchanged runtime/test suite passes 40 tests plus 78 subtests locally with
 warnings treated as errors. No scientific conclusion changes. Hosted verification
 and maintainer adoption are tracked in PR #10.
+
+### Exact reciprocal-weight correction: 9 November 2026
+
+The next prospective-prototype candidate closes the remaining premature weight
+underflow in PR #10. A small relative weight can round to zero before a large
+residual makes its contribution representable. We now form exact rational
+reciprocals of the admitted finite clamped distances, accumulate the convex
+mean exactly, and convert that mean to float once. Distance calculation, gain
+multiplication and baseline addition retain their float semantics.
+
+The complete engineering suite passes **45 tests and 146 subtests**. A separate
+AI reviewer reran it and checked 200 additional class evaluations against a
+high-precision independent reference. The default local timing case took about
+115 microseconds per prediction versus 108 for the parent. At top_k=128, this
+single-machine timing was about 2.42 ms versus 1.22 ms. These are descriptive
+artificial-input timings, not an efficacy or target-hardware benchmark.
+
+Details, measured overhead, exact source hashes and the preserved failing
+parent witness are in `research/EXACT_WEIGHT_RANGE_FIX_20261109.md` and
+`research/verification/exact_weights_20261109/`. This candidate is not merged.
+Hosted verification and maintainer integration remain open. The original APEN
+negative result and all scientific outcome records remain unchanged.
+
+
+### Integration of the two engineering candidates: 9 November 2026
+
+PR #11 now incorporates #10's verification commit while retaining the exact
+reciprocal runtime and full-range tests from `55cca70f1b1cdefb039ab72f7d65475c53476fc1`.
+The two earlier latency records remain distinct: the residual-mean record compares
+PR #10 with the old direct-dot implementation; the exact-weight record compares
+PR #11 with PR #10. Neither timing result is pooled or reassigned to another
+implementation. The historical residual-mean benchmark accepts an explicit pinned
+candidate source so it can be reproduced after the runtime has advanced.
+
+The combined workflow watches all tests, checks out the exact PR head, and runs
+`python -m pytest -q -W error tests/`, including `test_weight_range.py`.
+It retains standard-runner/read-only scope. The original skip-CI statement above
+describes the initial #11 commit; current-head hosted results are recorded in
+PR #11. Maintainer adoption is still separate from engineering validation. No
+scientific data, manuscript, training, merge to main or release is included.

@@ -121,6 +121,8 @@ def run_case(baseline_cls, candidate_cls, capacity, top_k, key_dim, args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline-file", type=Path, required=True)
+    parser.add_argument("--candidate-file", type=Path,
+                        help="Explicit PR #10 memory.py; defaults to the current runtime, which must match the pin")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--iterations", type=int, default=200)
     parser.add_argument("--repetitions", type=int, default=7)
@@ -129,7 +131,7 @@ def main():
     if args.iterations < 1 or args.repetitions < 3 or args.warmup < 0:
         parser.error("Require positive iterations, >=3 repetitions, and nonnegative warmup")
     root = Path(__file__).resolve().parents[1]
-    candidate_path = root / "apen_event_residual" / "memory.py"
+    candidate_path = args.candidate_file or (root / "apen_event_residual" / "memory.py")
     baseline_cls = load_source(args.baseline_file, "apen_latency_baseline", BASELINE_BLOB)
     candidate_cls = load_source(candidate_path, "apen_latency_candidate", CANDIDATE_BLOB)
     started = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())

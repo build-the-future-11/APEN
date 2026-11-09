@@ -1,9 +1,14 @@
 # Finite residual-mean arithmetic repair: 9 November 2026
 
-**Current implementation:** the reviewed final correction uses exact rational
+**Historical PR #10 implementation:** that reviewed correction uses exact rational
 accumulation of the already-rounded float weights and residuals, followed by one
 float conversion. The initial scaled implementation below is preserved as a
 failed intermediate approach; see the review correction at the end of this file.
+
+**Superseding arithmetic correction:** the next candidate forms exact reciprocal
+weights before accumulation, closing the relative-weight underflow limitation.
+See [EXACT_WEIGHT_RANGE_FIX_20261109.md](EXACT_WEIGHT_RANGE_FIX_20261109.md).
+The historical receipts and failed approaches below are retained unchanged.
 
 ## Defect and impact
 
@@ -102,3 +107,4 @@ scope. This is AI code review, not human scientific review.
 
 Latest receipt: `research/verification/residual_accumulation_20261109/followup_receipt.json`.
 Final-head hosted verification and maintainer integration remain open.
+

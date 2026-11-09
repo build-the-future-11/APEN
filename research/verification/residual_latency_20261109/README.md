@@ -54,31 +54,41 @@ cost explicitly.
 
 ## Reproduce
 
-From the repository root:
+This retained comparison measures PR #10, not the newer exact-reciprocal runtime
+in PR #11. From the repository root, recover the pinned #10 implementation first:
 
 ```sh
+git show 59bd5dfbe96980d3f4f365b604fec2b88b8caf6a:apen_event_residual/memory.py > /tmp/apen-residual-mean-memory.py
 python3 tools/benchmark_residual_latency.py \
+  --candidate-file /tmp/apen-residual-mean-memory.py \
   --baseline-file research/verification/residual_latency_20261109/baseline_memory.py \
   --output /tmp/apen-residual-latency.json
-python3 -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py
+python3 -m pytest -q -W error tests/
 ```
+
+The benchmark timing logic and source pins are unchanged; the later integration
+only adds an explicit candidate-file option. The default current-source path
+intentionally rejects PR #11's different runtime instead of mislabelling it as
+PR #10. The full-suite command above tests the current checkout and does not
+retroactively reproduce #10's test count.
 
 The script has no network calls. Its output path is explicit so a rerun can retain
 this recorded measurement. The source pins intentionally reject a different
 implementation; a later implementation needs its own benchmark review and source
 identity.
 
-Local correctness verification against the unchanged candidate runtime and tests:
+Recorded PR #10 local correctness verification:
 **40 tests and 78 subtests passed**, warnings treated as errors, 0.19 seconds.
 The full local receipt is in `local_validation.json`.
 
 ## Hosted verification and adoption
 
-The PR workflow now checks out the actual PR head explicitly and treats warnings
-as errors, matching the local command. It retains the same standard runner,
-read-only permissions, pinned actions and engineering-test scope. No workflow
-dispatch or private allowance is used. Hosted status is recorded in the PR after
-the exact head completes.
+PR #10's hosted run 42630093121 passed 40 tests and 78 subtests on
+`f0cb5623fa234309894092addf82710679a0acc1`. This does not certify the newer #11
+runtime. The integrated workflow checks out the actual PR head, runs the whole
+tests directory and treats warnings as errors. Current #11 status is recorded in
+its PR. Standard-runner/read-only scope, pinned actions and engineering boundaries
+are retained; neither draft is merged.
 
 No model code, original evidence, protected experiment, manuscript, default branch,
 merge or production release changed. Maintainer review and integration remain
