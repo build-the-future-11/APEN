@@ -85,3 +85,44 @@ The source correction and independent regression evidence are documented in
 [`research/DISTANCE_SCALING_FIX_20261105.md`](research/DISTANCE_SCALING_FIX_20261105.md).
 The entire local engineering suite passed: 31 tests and 26 subtests. Existing
 scientific conclusions, evidence records and experiment holds are unchanged.
+
+### Residual-mean arithmetic correction: 9 November 2026
+
+A further shared V1/V2 correction scales finite residuals before accurate
+weighted summation. This prevents direct-dot overflow of representable convex
+means and preserves the tested cancellation/subnormal cases. It leaves causal
+admission, retrieval, gains and the historical APEN evidence boundary intact.
+
+The unchanged predecessor fails 46 new test/subtest cases. The repaired full
+local suite passes 37 tests and 72 subtests with warnings treated as errors.
+Exact source identities, raw logs, commands and remaining gates are in
+`research/verification/residual_accumulation_20261109/receipt.json`; rationale
+and limitations are in `research/RESIDUAL_ACCUMULATION_FIX_20261109.md`.
+This is a stacked draft based on PR #8, not a merged or released correction.
+Final-head hosted verification and maintainer review remain pending. No
+scientific checkpoint is advanced and no submitted manuscript is changed.
+
+Independent AI review then found two dynamic-range regressions in that initial
+scaling approach, which is superseded by exact rational accumulation of the
+already-computed relative float weights and finite residuals. Both failures and
+a related positive-subnormal-weight case are retained as regressions. The final
+suite passes **40 tests and 78 subtests**; a separate AI reviewer reran the suite
+and reviewed the exact corrected source successfully. Initial logs/receipt and
+the failed intermediate commit remain intact. The latest identity and review
+record is `research/verification/residual_accumulation_20261109/followup_receipt.json`.
+Relative-weight rounding/underflow remains as before, and the extra rational
+arithmetic has not been throughput-benchmarked. Hosted integration and human
+maintainer review remain pending; scientific state is unchanged.
+
+### Engineering latency measured: 9 November 2026
+
+The source-bound synthetic CPU benchmark is complete in
+`research/verification/residual_latency_20261109/`. Six workloads each use
+seven alternating-order batches of 200 full V1 predictions. The default-size
+32-entry/top-4/8-dimensional bank measured 124.2 to 173.9 microseconds per
+prediction; selecting all 32 measured 155.0 to 375.8 microseconds. Raw timing
+ranges and environmental limits are retained. Larger-bank results contain
+substantial shared-host noise and do not establish a speedup or acceptance target.
+The unchanged runtime/test suite passes 40 tests plus 78 subtests locally with
+warnings treated as errors. No scientific conclusion changes. Hosted verification
+and maintainer adoption are tracked in PR #10.

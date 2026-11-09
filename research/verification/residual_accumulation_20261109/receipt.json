@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-09",
+  "scope": "Artificial engineering fixtures only; no scientific outcome replay",
+  "base_commit": "86f7d6c0cbf34c3f767f3271dcb4e953ac32d092",
+  "base_pr": 8,
+  "implementation_files_changed": [
+    "apen_event_residual/memory.py"
+  ],
+  "test_files_changed": [
+    "tests/test_memory_v2.py"
+  ],
+  "new_test_methods": 6,
+  "commands": [
+    {
+      "command": "python3 -m pytest -q -W error tests/test_memory_v2.py -k ResidualAccumulationTests",
+      "source": "unchanged predecessor implementation plus new tests",
+      "exit_code": 1,
+      "pytest_summary": "46 failed, 4 passed, 22 deselected, 2 subtests passed in 0.54s"
+    },
+    {
+      "command": "python3 -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py",
+      "source": "repaired implementation",
+      "exit_code": 0,
+      "pytest_summary": "37 passed, 72 subtests passed in 0.17s"
+    }
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5"
+  },
+  "sha256": {
+    "apen_event_residual/memory.py": "1f1fec5ca6cb89f254f6cc53e81a3f066dee63c7e1b7d4ede1ebe74c843cf693",
+    "tests/test_memory_v2.py": "073cf6d593ad3f295cf96c58f2889ec5f237c5541686f3bbb0f65dbaa8858d9b",
+    "RESEARCH_STATE.md": "809906357fd53b7ca67d9045d64512012d2101c969b043f24a74b1860316ca13",
+    "research/RESIDUAL_ACCUMULATION_FIX_20261109.md": "2bbad4e45fcec8bb722896c2bb85f6d38219fb765dbb82b068474abdd175d26f"
+  },
+  "logs": {
+    "before": {
+      "file": "before.log.gz",
+      "uncompressed_bytes": 154463,
+      "uncompressed_sha256": "9c504afb413edec2d9882faea074374c30af66334b1a347ff048315c534b1b2f"
+    },
+    "after": {
+      "file": "after.log",
+      "uncompressed_bytes": 119,
+      "uncompressed_sha256": "20e5c257ca73709db78c6c79d0325964957cc257c16fc085292e6c41dcb3fad7"
+    }
+  },
+  "scientific_checkpoint_advanced": false,
+  "historical_evidence_changed": false,
+  "submitted_paper_changed": false,
+  "paid_compute": 0,
+  "new_experiments": 0,
+  "hosted_ci": "NOT RUN; skip ci",
+  "remaining": [
+    "maintainer review",
+    "final-head hosted integration verification",
+    "existing original spatial-PDE source and release requirements unchanged"
+  ]
+}

@@ -270,5 +270,122 @@ class ContextDistanceTests(unittest.TestCase):
                 self.assertEqual(memory.predict(key=key, baseline=10., at_time=2).corrected, 13.)
 
 
+class ResidualAccumulationTests(unittest.TestCase):
+    """Finite convex means must remain finite, even near float64's limit."""
+
+    def test_zero_weight_outlier_does_not_erase_the_contributing_residual(self):
+        smallest = float.fromhex('0x0.0000000000001p-1022')
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            memory = cls(key_dim=1, capacity=2, top_k=2, gain=1., eps=smallest)
+            memory.observe(key=[0.], residual=1e-100, available_at=0, observed_at=0)
+            memory.observe(key=[1e100], residual=1e308, available_at=0, observed_at=0)
+            with np.errstate(all='raise'):
+                result = memory.predict(key=[0.], baseline=0., at_time=1)
+            self.assertEqual(result.corrected, 1e-100)
+
+    def test_cancellation_does_not_underflow_a_representable_tiny_mean(self):
+        with localcontext() as context:
+            context.prec = 80
+            expected = float(Decimal.from_float(1e-100) / Decimal(3))
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for residuals in ((1e308, -1e308, 1e-100), (1e308, 1e-100, -1e308)):
+                with self.subTest(memory=cls.__name__, residuals=residuals):
+                    memory = cls(key_dim=1, capacity=3, top_k=3, gain=1.)
+                    for residual in residuals:
+                        _observe(memory, 0, residual=residual)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0.], baseline=0., at_time=1)
+                    self.assertEqual(result.corrected, expected)
+
+    def test_positive_subnormal_weights_do_not_erase_the_main_residual(self):
+        smallest = float.fromhex('0x0.0000000000001p-1022')
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            with self.subTest(memory=cls.__name__):
+                memory = cls(key_dim=1, capacity=3, top_k=3, gain=1., eps=smallest)
+                for key, residual in ((0., 1e-100), (1., 1e308), (-1., -1e308)):
+                    memory.observe(key=[key], residual=residual, available_at=0, observed_at=0)
+                with np.errstate(all='raise'):
+                    result = memory.predict(key=[0.], baseline=0., at_time=1)
+                self.assertEqual(result.corrected, 1e-100)
+
+    def test_identical_maximum_residuals_keep_their_value(self):
+        limit = float(np.finfo(float).max)
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for count in (11, 12, 25):
+                for sign in (-1., 1.):
+                    for gain in (0., .5, 1.):
+                        with self.subTest(memory=cls.__name__, count=count,
+                                          sign=sign, gain=gain):
+                            memory = cls(key_dim=1, capacity=count, top_k=count, gain=gain)
+                            for _ in range(count):
+                                _observe(memory, 0, residual=sign * limit)
+                            with np.errstate(all='raise'):
+                                result = memory.predict(key=[0.], baseline=0., at_time=1)
+                            self.assertEqual(result.corrected, gain * sign * limit)
+                            self.assertEqual(result.used_entries, count)
+
+    def test_unequal_weights_preserve_identical_maximum_residuals(self):
+        limit = float(np.finfo(float).max)
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            memory = cls(key_dim=1, capacity=12, top_k=12, gain=1.)
+            for index in range(12):
+                memory.observe(key=[float(index + 1)], residual=limit,
+                               available_at=0, observed_at=0)
+            with np.errstate(all='raise'):
+                result = memory.predict(key=[0.], baseline=0., at_time=1)
+            self.assertEqual(result.corrected, limit)
+
+    def test_cancelling_extremes_keep_representable_small_mean(self):
+        limit = float(np.finfo(float).max)
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for residuals in ((limit, 3., -limit), (-limit, 3., limit)):
+                with self.subTest(memory=cls.__name__, residuals=residuals):
+                    memory = cls(key_dim=1, capacity=3, top_k=3, gain=1.)
+                    for residual in residuals:
+                        _observe(memory, 0, residual=residual)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0.], baseline=0., at_time=1)
+                    self.assertAlmostEqual(result.corrected, 1., places=14)
+
+    def test_zero_and_smallest_residuals_keep_defined_behavior(self):
+        smallest = float.fromhex('0x0.0000000000001p-1022')
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            for residual in (0., smallest, -smallest):
+                with self.subTest(memory=cls.__name__, residual=residual):
+                    memory = cls(key_dim=1, capacity=11, top_k=11, gain=1.)
+                    for _ in range(11):
+                        _observe(memory, 0, residual=residual)
+                    with np.errstate(all='raise'):
+                        result = memory.predict(key=[0.], baseline=0., at_time=1)
+                    self.assertEqual(result.corrected, residual)
+
+    def test_ordinary_weighted_mean_matches_independent_decimal_reference(self):
+        residuals, distances = (-21., .25, 13., -7.), (1., 2., 3., 9.)
+        with localcontext() as context:
+            context.prec = 80
+            weights = [Decimal(1) / Decimal.from_float(d) for d in distances]
+            expected = float(sum(w * Decimal.from_float(r) for w, r in zip(weights, residuals))
+                             / sum(weights))
+        for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
+            memory = cls(key_dim=1, capacity=4, top_k=4, gain=1.)
+            for distance, residual in zip(distances, residuals):
+                memory.observe(key=[distance], residual=residual,
+                               available_at=0, observed_at=0)
+            result = memory.predict(key=[0.], baseline=0., at_time=1)
+            self.assertAlmostEqual(result.corrected, expected, places=14)
+
+    def test_truly_overflowing_prediction_still_rejects_without_clock_change(self):
+        limit = float(np.finfo(float).max)
+        memory = EpisodicResidualMemoryV2(key_dim=1, capacity=11, top_k=11, gain=1.)
+        for _ in range(11):
+            _observe(memory, 0, residual=limit)
+        memory.predict(key=[0.], baseline=0., at_time=1)
+        with self.assertRaisesRegex(ValueError, 'nonfinite corrected prediction'):
+            memory.predict(key=[0.], baseline=limit, at_time=10)
+        self.assertEqual(memory.last_prediction_at, 1)
+        self.assertEqual(memory.size, 11)
+        self.assertEqual(memory.predict(key=[0.], baseline=0., at_time=2).corrected, limit)
+
+
 if __name__ == '__main__':
     unittest.main()
