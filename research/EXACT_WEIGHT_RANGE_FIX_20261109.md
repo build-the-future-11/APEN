@@ -97,8 +97,13 @@ records Python/NumPy versions, platform, seed, source hashes and all batches.
 
 ## Integration and scientific status
 
-This is an isolated draft stacked on PR #10. The commit uses `[skip ci]`;
-hosted CI has not run. A maintainer must review and integrate it separately.
+The original #11 candidate was stacked on PR #10 at `59bd5df...` and used
+`[skip ci]`; its recorded local results above remain unchanged. The subsequent
+integration retains this runtime and every regression byte-for-byte while
+incorporating #10's later verification work. The current workflow checks out the
+actual PR head and runs the entire tests directory with warnings treated as
+errors. Current-head hosted results are recorded in PR #11. Maintainer review
+and adoption remain separate.
 No scientific data, training, frozen endpoint, paper, release or production
 configuration changed. The original APEN negative scientific result remains
 unchanged, and these arithmetic fixtures establish no forecasting advantage.
