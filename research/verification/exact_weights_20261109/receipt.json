@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "59bd5dfbe96980d3f4f365b604fec2b88b8caf6a",
+  "base_tree": "2784c8f75c4bf4229a8f76c65ed321815800250a",
+  "base_memory_blob": "5b7b2b5efc55c214834456e7f04c4d105b039f04",
+  "base_memory_sha256": "adea226442b965d7bac2846e673438cb3f8527b11c767ef3269607e043116f25",
+  "candidate_sha256": {
+    "apen_event_residual/memory.py": "cf67e1229a60a13276b10c5beb4ec5ac6ebd2c988bb45573d6146faa1e57248e",
+    "tests/test_memory_v2.py": "ca03df316d5dc9c40e021fea6b69b72cbf42baa0d83ebc7daf6e2e99d9db14e4",
+    "tests/test_weight_range.py": "6c180f9419d128e33da751385a32dc754d841e49917fb7db51f5b3cd90c79f94",
+    "research/benchmark_weight_range.py": "734933f7937bdb08ce4f1850551b73908379eef3efa793b6b626880b38f40a89",
+    "README.md": "78d05f3d88e710cb9e4e6e47725699b4b2287d24b0ae18f618827250843ef29f",
+    "RESEARCH_STATE.md": "f3f4be1e7dc3e71962e21ad4145c29c4aff293332561745d6e23e7ee9ccfc266",
+    "research/RESIDUAL_ACCUMULATION_FIX_20261109.md": "4cb991d465518ee9c225d64f4eb2ad986cf6f308905ad2e02b8b1c3b6d80d0dd",
+    "research/EXACT_WEIGHT_RANGE_FIX_20261109.md": "b7b76f0cbf82e1719575df4e21f4f1d910384aa051b96459f52db5bfc48e8f4e"
+  },
+  "parent_new_regression_result": "29 failed, 5 passed, 39 subtests passed",
+  "candidate_suite_result": "45 passed, 146 subtests passed",
+  "parent_log_uncompressed_sha256": "ba1e22ee98b001566864321e9a3fcd30ff24a5b1178199d2ad9b4b62ababbc6b",
+  "parent_log_uncompressed_bytes": 43108,
+  "independent_review_file": "independent_review.json",
+  "benchmark_file": "benchmark.json",
+  "candidate_log_file": "candidate_tests.log",
+  "scientific_experiment": false,
+  "data_or_manuscript_changed": false,
+  "paid_compute": false,
+  "hosted_ci": "Not run; skip ci",
+  "integration": "Draft candidate; maintainer review and merge remain"
+}

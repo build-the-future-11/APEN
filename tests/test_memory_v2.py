@@ -273,15 +273,22 @@ class ContextDistanceTests(unittest.TestCase):
 class ResidualAccumulationTests(unittest.TestCase):
     """Finite convex means must remain finite, even near float64's limit."""
 
-    def test_zero_weight_outlier_does_not_erase_the_contributing_residual(self):
+    def test_extremely_small_weight_keeps_both_residual_contributions(self):
         smallest = float.fromhex('0x0.0000000000001p-1022')
+        with localcontext() as context:
+            context.prec = 1000
+            near_weight = Decimal(1) / Decimal.from_float(smallest)
+            far_weight = Decimal(1) / Decimal.from_float(1e100)
+            expected = float((near_weight * Decimal.from_float(1e-100)
+                              + far_weight * Decimal.from_float(1e308))
+                             / (near_weight + far_weight))
         for cls in (EpisodicResidualMemory, EpisodicResidualMemoryV2):
             memory = cls(key_dim=1, capacity=2, top_k=2, gain=1., eps=smallest)
             memory.observe(key=[0.], residual=1e-100, available_at=0, observed_at=0)
             memory.observe(key=[1e100], residual=1e308, available_at=0, observed_at=0)
             with np.errstate(all='raise'):
                 result = memory.predict(key=[0.], baseline=0., at_time=1)
-            self.assertEqual(result.corrected, 1e-100)
+            self.assertEqual(result.corrected, expected)
 
     def test_cancellation_does_not_underflow_a_representable_tiny_mean(self):
         with localcontext() as context:
@@ -389,3 +396,4 @@ class ResidualAccumulationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

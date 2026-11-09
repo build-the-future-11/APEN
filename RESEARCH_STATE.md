@@ -113,3 +113,26 @@ record is `research/verification/residual_accumulation_20261109/followup_receipt
 Relative-weight rounding/underflow remains as before, and the extra rational
 arithmetic has not been throughput-benchmarked. Hosted integration and human
 maintainer review remain pending; scientific state is unchanged.
+
+### Exact reciprocal-weight correction: 9 November 2026
+
+The next prospective-prototype candidate closes the remaining premature weight
+underflow in PR #10. A small relative weight can round to zero before a large
+residual makes its contribution representable. We now form exact rational
+reciprocals of the admitted finite clamped distances, accumulate the convex
+mean exactly, and convert that mean to float once. Distance calculation, gain
+multiplication and baseline addition retain their float semantics.
+
+The complete engineering suite passes **45 tests and 146 subtests**. A separate
+AI reviewer reran it and checked 200 additional class evaluations against a
+high-precision independent reference. The default local timing case took about
+115 microseconds per prediction versus 108 for the parent. At top_k=128, this
+single-machine timing was about 2.42 ms versus 1.22 ms. These are descriptive
+artificial-input timings, not an efficacy or target-hardware benchmark.
+
+Details, measured overhead, exact source hashes and the preserved failing
+parent witness are in `research/EXACT_WEIGHT_RANGE_FIX_20261109.md` and
+`research/verification/exact_weights_20261109/`. This candidate is not merged.
+Hosted verification and maintainer integration remain open. The original APEN
+negative result and all scientific outcome records remain unchanged.
+

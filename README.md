@@ -55,7 +55,7 @@ Python 3.10 or newer is required. From a checkout of this repository:
 
 ```sh
 python -m pip install -e ".[dev]"
-python -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py
+python -m pytest -q -W error tests/
 ```
 
 Use `EpisodicResidualMemoryV2` for a forward chronological stream:
@@ -92,3 +92,4 @@ scientific publication gate, see [repository evidence boundary](research/REPOSIT
 ## Closeout rule
 
 Preserve the negative result honestly. A successor study may test a materially revised hypothesis, but it should be treated as a new study with its own protocol, evidence, and conclusion rather than as a rewrite of this closeout.
+
