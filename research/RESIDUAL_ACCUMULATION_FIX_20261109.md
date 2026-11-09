@@ -1,5 +1,10 @@
 # Finite residual-mean arithmetic repair: 9 November 2026
 
+**Current implementation:** the reviewed final correction uses exact rational
+accumulation of the already-rounded float weights and residuals, followed by one
+float conversion. The initial scaled implementation below is preserved as a
+failed intermediate approach; see the review correction at the end of this file.
+
 ## Defect and impact
 
 The prospective V1/V2 residual-memory prototype rejects a representable finite
@@ -60,3 +65,40 @@ This code remains a prospective engineering prototype. The original spatial-PDE
 source recovery and negative comparison are unchanged. Passing these arithmetic
 tests does not establish predictive efficacy or make the original research
 release complete.
+
+## Independent review correction: exact accumulation
+
+Two separate AI agent reviews found that global residual scaling can erase a
+representable small contribution. With equal weights, the residual sequence
+`[1e308, -1e308, 1e-100]` became zero instead of approximately `3.33e-101`.
+A zero-weight outlier with residual `1e308` could also set the scale and erase a
+nearest-neighbour contribution of `1e-100`. The same risk persists with positive
+subnormal weights when the extreme terms cancel. These findings block the
+initial scaled implementation; its commit, process logs and initial receipt are
+retained rather than overwritten.
+
+The final implementation represents each nonzero admitted float weight and
+finite stored residual with `fractions.Fraction`, accumulates their products and
+the weight sum exactly, divides, then converts the mean to float once. At least
+one relative weight is exactly one, so the denominator is positive. The exact
+mean lies within the finite residual extrema and therefore has a finite rounded
+float result. Zero-weight entries do not contribute. The final baseline-plus-
+gain correction still has the original finite-output check.
+
+This precision applies to accumulation of the **already-computed float weights**.
+The earlier distance and relative-weight divisions remain floating-point
+operations; their rounding and possible underflow are unchanged. Exact rational
+arithmetic adds CPU work per retained entry; runtime throughput has not been
+benchmarked. No predictive-performance statement follows from this repair.
+
+Three added review-driven methods cover the equal-weight dynamic-range
+cancellation, the zero-weight outlier, and the positive-subnormal-weight
+cancellation. The first two methods produce five failed test/subtest cases on
+the initial scaled implementation. Final full-suite result: **40 tests and
+78 subtests pass**, warnings treated as errors. The operations agent separately
+read the corrected source and reran the full suite, obtaining the same pass
+counts; its review found no remaining blocker in the admitted finite-float
+scope. This is AI code review, not human scientific review.
+
+Latest receipt: `research/verification/residual_accumulation_20261109/followup_receipt.json`.
+Final-head hosted verification and maintainer integration remain open.

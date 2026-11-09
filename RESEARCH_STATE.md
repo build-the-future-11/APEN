@@ -101,3 +101,15 @@ and limitations are in `research/RESIDUAL_ACCUMULATION_FIX_20261109.md`.
 This is a stacked draft based on PR #8, not a merged or released correction.
 Final-head hosted verification and maintainer review remain pending. No
 scientific checkpoint is advanced and no submitted manuscript is changed.
+
+Independent AI review then found two dynamic-range regressions in that initial
+scaling approach, which is superseded by exact rational accumulation of the
+already-computed relative float weights and finite residuals. Both failures and
+a related positive-subnormal-weight case are retained as regressions. The final
+suite passes **40 tests and 78 subtests**; a separate AI reviewer reran the suite
+and reviewed the exact corrected source successfully. Initial logs/receipt and
+the failed intermediate commit remain intact. The latest identity and review
+record is `research/verification/residual_accumulation_20261109/followup_receipt.json`.
+Relative-weight rounding/underflow remains as before, and the extra rational
+arithmetic has not been throughput-benchmarked. Hosted integration and human
+maintainer review remain pending; scientific state is unchanged.

@@ -8,7 +8,8 @@ not been evaluated on any scientific dataset or protected benchmark.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import dist, fsum
+from fractions import Fraction
+from math import dist
 import numpy as np
 
 
@@ -108,18 +109,17 @@ class EpisodicResidualMemory:
         denominators = np.asarray([max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
         with np.errstate(under='ignore'):
             weights = denominators.min() / denominators
-        # A convex average is finite for finite residuals, but a direct dot
-        # product can overflow while adding terms near float64's maximum or
-        # erase a small contribution between opposite large terms. Scale the
-        # residuals before accurate summation, then restore their common scale.
-        # Keep weights unnormalized until after summation: their sum is positive,
-        # and every scaled numerator term has magnitude at most its weight.
-        residuals = [r.residual for _, _, _, r in chosen]
-        residual_scale = max(abs(r) for r in residuals)
-        learned_residual = 0.0 if residual_scale == 0.0 else (
-            fsum(float(w) * (r / residual_scale) for w, r in zip(weights, residuals))
-            / fsum(map(float, weights)) * residual_scale
-        )
+        # Accumulate the already-rounded relative weights and finite residuals
+        # as exact binary rationals, then round their mean once to float. A
+        # direct dot can overflow on a finite convex mean; global scaling can
+        # instead erase a representable small term or let a zero-weight outlier
+        # erase the whole mean. This bounded bank trades extra CPU arithmetic
+        # for stable accumulation. The earlier weight-division rounding remains.
+        weighted = [(Fraction.from_float(float(w)), Fraction.from_float(r.residual))
+                    for w, (_, _, _, r) in zip(weights, chosen) if w > 0.0]
+        denominator = sum(w for w, _ in weighted)
+        numerator = sum(w * r for w, r in weighted)
+        learned_residual = float(numerator / denominator)
         amount = self.gain * learned_residual
         prediction = float(baseline) + amount
         if not np.isfinite(prediction):
