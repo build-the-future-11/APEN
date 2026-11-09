@@ -1,0 +1,261 @@
+{
+  "kind": "synthetic_cpu_engineering_latency",
+  "not_scientific_efficacy_evidence": true,
+  "started_at_utc": "2026-11-09T13:55:00Z",
+  "candidate_commit": "59bd5dfbe96980d3f4f365b604fec2b88b8caf6a",
+  "candidate_memory_git_blob": "5b7b2b5efc55c214834456e7f04c4d105b039f04",
+  "baseline_commit": "86f7d6c0cbf34c3f767f3271dcb4e953ac32d092",
+  "baseline_memory_git_blob": "13145e5636994a85e99a22dcbabada9c839f66fe",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "visible_cpu_count": 9,
+    "gc_enabled": true,
+    "timer": "time.perf_counter_ns"
+  },
+  "protocol": {
+    "cases": 6,
+    "repetitions": 7,
+    "predictions_per_batch": 200,
+    "warmup_per_implementation": 30,
+    "comparison_queries_per_case": 32,
+    "alternating_order": true,
+    "population_and_validation_excluded_from_timing": true,
+    "timed_operation": "complete V1 predict call on an unchanged full bank",
+    "summary": "median of batch means; not a per-request tail-latency percentile",
+    "scope": "ordinary finite synthetic keys/residuals; no training or dataset evaluation"
+  },
+  "cases": [
+    {
+      "capacity": 32,
+      "top_k": 4,
+      "key_dim": 8,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 124.161915,
+          "min_batch_mean_microseconds": 93.373705,
+          "max_batch_mean_microseconds": 254.056035,
+          "batch_mean_microseconds": [
+            93.373705,
+            166.75701,
+            108.993675,
+            254.056035,
+            123.899365,
+            124.161915,
+            139.52199
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 173.88594,
+          "min_batch_mean_microseconds": 127.37876,
+          "max_batch_mean_microseconds": 231.159785,
+          "batch_mean_microseconds": [
+            206.862065,
+            127.37876,
+            143.22601500000002,
+            173.88594,
+            231.159785,
+            146.102325,
+            175.88407
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 1.4004772719557363
+    },
+    {
+      "capacity": 32,
+      "top_k": 32,
+      "key_dim": 8,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 155.01487,
+          "min_batch_mean_microseconds": 126.568065,
+          "max_batch_mean_microseconds": 249.51685500000002,
+          "batch_mean_microseconds": [
+            138.823035,
+            155.01487,
+            143.784685,
+            249.51685500000002,
+            177.67083499999998,
+            171.902675,
+            126.568065
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 375.78631,
+          "min_batch_mean_microseconds": 324.617685,
+          "max_batch_mean_microseconds": 427.7605,
+          "batch_mean_microseconds": [
+            324.617685,
+            348.197745,
+            427.7605,
+            405.969785,
+            375.78631,
+            414.215555,
+            332.827895
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 2.4241952401082556
+    },
+    {
+      "capacity": 256,
+      "top_k": 4,
+      "key_dim": 8,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 1010.998645,
+          "min_batch_mean_microseconds": 788.55456,
+          "max_batch_mean_microseconds": 1065.43028,
+          "batch_mean_microseconds": [
+            1065.43028,
+            935.53979,
+            1046.06993,
+            1062.6247549999998,
+            949.89325,
+            788.55456,
+            1010.998645
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 1049.9569299999998,
+          "min_batch_mean_microseconds": 782.986595,
+          "max_batch_mean_microseconds": 1109.338795,
+          "batch_mean_microseconds": [
+            1109.338795,
+            1049.9569299999998,
+            1096.825175,
+            1107.2646650000002,
+            1004.4982249999999,
+            886.54665,
+            782.986595
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 1.0385344581742737
+    },
+    {
+      "capacity": 256,
+      "top_k": 32,
+      "key_dim": 8,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 1029.94569,
+          "min_batch_mean_microseconds": 840.843165,
+          "max_batch_mean_microseconds": 1341.3093999999999,
+          "batch_mean_microseconds": [
+            1153.27116,
+            903.85154,
+            840.843165,
+            1029.94569,
+            970.312045,
+            1341.3093999999999,
+            1089.6254199999998
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 1269.755355,
+          "min_batch_mean_microseconds": 1035.593895,
+          "max_batch_mean_microseconds": 1494.508415,
+          "batch_mean_microseconds": [
+            1174.846055,
+            1035.593895,
+            1269.755355,
+            1269.543585,
+            1484.395455,
+            1494.508415,
+            1488.232465
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 1.2328371945514913
+    },
+    {
+      "capacity": 1024,
+      "top_k": 4,
+      "key_dim": 64,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 8505.236115,
+          "min_batch_mean_microseconds": 7612.1993,
+          "max_batch_mean_microseconds": 10396.40811,
+          "batch_mean_microseconds": [
+            10396.40811,
+            7612.1993,
+            8207.262505,
+            9397.74689,
+            8505.236115,
+            8876.869755000002,
+            7719.182585
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 8244.01895,
+          "min_batch_mean_microseconds": 7323.814184999999,
+          "max_batch_mean_microseconds": 10519.7472,
+          "batch_mean_microseconds": [
+            8170.991505,
+            8244.01895,
+            8446.057215,
+            10519.7472,
+            8814.61904,
+            7323.814184999999,
+            7472.405849999999
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 0.9692874881463535
+    },
+    {
+      "capacity": 1024,
+      "top_k": 32,
+      "key_dim": 64,
+      "max_absolute_prediction_difference": 0,
+      "timing": {
+        "baseline": {
+          "median_microseconds_per_prediction": 8134.251125,
+          "min_batch_mean_microseconds": 7663.959665,
+          "max_batch_mean_microseconds": 9378.601980000001,
+          "batch_mean_microseconds": [
+            7900.71692,
+            7663.959665,
+            9378.601980000001,
+            8953.06017,
+            8134.251125,
+            8203.023825,
+            7700.828355000001
+          ]
+        },
+        "candidate": {
+          "median_microseconds_per_prediction": 8892.47316,
+          "min_batch_mean_microseconds": 7965.372885,
+          "max_batch_mean_microseconds": 9318.346665,
+          "batch_mean_microseconds": [
+            7965.372885,
+            8133.215185,
+            9318.346665,
+            8968.831199999999,
+            9281.69599,
+            8892.47316,
+            8337.921475
+          ]
+        }
+      },
+      "median_candidate_to_baseline_ratio": 1.0932135021833371
+    }
+  ],
+  "limitations": [
+    "Single shared container and one run; no CPU affinity or frequency isolation.",
+    "No latency acceptance threshold or deployment hardware was specified.",
+    "V2 clock wrapper overhead, ingestion, allocation peaks and concurrency are not benchmarked.",
+    "The old baseline is numerically invalid for retained extreme-value regressions.",
+    "No claim about forecasting benefit or the historical spatial-PDE APEN implementation."
+  ]
+}

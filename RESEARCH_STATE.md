@@ -113,3 +113,16 @@ record is `research/verification/residual_accumulation_20261109/followup_receipt
 Relative-weight rounding/underflow remains as before, and the extra rational
 arithmetic has not been throughput-benchmarked. Hosted integration and human
 maintainer review remain pending; scientific state is unchanged.
+
+### Engineering latency measured: 9 November 2026
+
+The source-bound synthetic CPU benchmark is complete in
+`research/verification/residual_latency_20261109/`. Six workloads each use
+seven alternating-order batches of 200 full V1 predictions. The default-size
+32-entry/top-4/8-dimensional bank measured 124.2 to 173.9 microseconds per
+prediction; selecting all 32 measured 155.0 to 375.8 microseconds. Raw timing
+ranges and environmental limits are retained. Larger-bank results contain
+substantial shared-host noise and do not establish a speedup or acceptance target.
+The unchanged runtime/test suite passes 40 tests plus 78 subtests locally with
+warnings treated as errors. No scientific conclusion changes. Hosted verification
+and maintainer adoption are tracked in PR #10.
