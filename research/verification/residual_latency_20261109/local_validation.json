@@ -1,0 +1,19 @@
+{
+  "source_commit": "59bd5dfbe96980d3f4f365b604fec2b88b8caf6a",
+  "command": "python3 -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py",
+  "exit_code": 0,
+  "tests_passed": 40,
+  "subtests_passed": 78,
+  "failed": 0,
+  "skipped": 0,
+  "elapsed_seconds": 0.19,
+  "output": "........................................                           [100%]\n40 passed, 78 subtests passed in 0.19s\n",
+  "source_files": {
+    "apen_event_residual/__init__.py": "4174403d3ca19ce12543f554eba3fd85401e678c",
+    "apen_event_residual/causal_memory_v2.py": "cc31eccb5fdfbba4893e1e624733f16458c2a39a",
+    "apen_event_residual/memory.py": "5b7b2b5efc55c214834456e7f04c4d105b039f04",
+    "tests/test_memory.py": "c705a901071af3e5e1240365b6c5870ad2564e79",
+    "tests/test_memory_v2.py": "ca02d37299cafc11623efa1940cad2b135bcad81"
+  },
+  "no_model_or_test_source_changes": true
+}

@@ -9,11 +9,11 @@ The current APEN line should be treated as a **NEGATIVE** result with respect to
 The retained manuscript history contains small improvements over a frozen base, but the strongest equal-update control favored continued base training. The current repository status further records that the repaired/current APEN comparison is not submission-ready and that reduced validation-selected comparisons do not support superiority.
 
 ## Repository/release state
-The public default branch currently contains only `README.md` and `FINAL_STATUS_2026-09-30.md`.
+Historical snapshot (superseded by the 7 November 2026 inventory): the public default branch formerly contained only `README.md` and `FINAL_STATUS_2026-09-30.md`.
 
-The README references paths and commands including `APEN.md`, `STATUS.md`, `RESEARCH_TRUTH.md`, `REPRODUCE.md`, `scripts/preflight.py`, and `paper/apen_v2/README.md`, but those paths are absent from the current default branch.
+The older README referenced paths including `APEN.md`, `STATUS.md`, `RESEARCH_TRUTH.md`, `REPRODUCE.md`, `scripts/preflight.py`, and `paper/apen_v2/README.md`. Those historical paths remain unverified as a complete spatial-PDE scientific release. The separate `apen_event_residual/`, `tests/`, and `research/` materials are a prospective engineering prototype, not recovery of that paper's source/evidence. See `research/REPOSITORY_BOUNDARY_20261107.md`.
 
-Therefore the public repository is **not a reproducible release of the implementation described by its README**.
+Therefore the public repository is **not a reproducible release of the original spatial-PDE APEN experiments**, despite the separately documented prototype and tests.
 
 ## Evidence boundary
 - Historical/pre-repair evidence must remain separate from repaired-valid evidence.
@@ -71,3 +71,98 @@ The earlier V1/V2 source-preservation and verification statements describe their
 recorded October 10 commits. They do not assert byte equality with this later
 arithmetic correction. Historical scientific evidence and conclusions remain
 unchanged; no outcome-bearing study is opened.
+
+### Context-distance arithmetic correction — 5 November 2026
+
+The prospective prototype now uses a scaled Euclidean distance to prevent
+squaring underflow from turning distinct neighbours into false ties and
+squaring overflow from rejecting representable distances. The README now
+describes the prototype files already present instead of saying that the
+repository contains only two status files. This does not restore the historical
+forecasting implementation.
+
+The source correction and independent regression evidence are documented in
+[`research/DISTANCE_SCALING_FIX_20261105.md`](research/DISTANCE_SCALING_FIX_20261105.md).
+The entire local engineering suite passed: 31 tests and 26 subtests. Existing
+scientific conclusions, evidence records and experiment holds are unchanged.
+
+### Residual-mean arithmetic correction: 9 November 2026
+
+A further shared V1/V2 correction scales finite residuals before accurate
+weighted summation. This prevents direct-dot overflow of representable convex
+means and preserves the tested cancellation/subnormal cases. It leaves causal
+admission, retrieval, gains and the historical APEN evidence boundary intact.
+
+The unchanged predecessor fails 46 new test/subtest cases. The repaired full
+local suite passes 37 tests and 72 subtests with warnings treated as errors.
+Exact source identities, raw logs, commands and remaining gates are in
+`research/verification/residual_accumulation_20261109/receipt.json`; rationale
+and limitations are in `research/RESIDUAL_ACCUMULATION_FIX_20261109.md`.
+This is a stacked draft based on PR #8, not a merged or released correction.
+Final-head hosted verification and maintainer review remain pending. No
+scientific checkpoint is advanced and no submitted manuscript is changed.
+
+Independent AI review then found two dynamic-range regressions in that initial
+scaling approach, which is superseded by exact rational accumulation of the
+already-computed relative float weights and finite residuals. Both failures and
+a related positive-subnormal-weight case are retained as regressions. The final
+suite passes **40 tests and 78 subtests**; a separate AI reviewer reran the suite
+and reviewed the exact corrected source successfully. Initial logs/receipt and
+the failed intermediate commit remain intact. The latest identity and review
+record is `research/verification/residual_accumulation_20261109/followup_receipt.json`.
+Relative-weight rounding/underflow remains as before, and the extra rational
+arithmetic has not been throughput-benchmarked. Hosted integration and human
+maintainer review remain pending; scientific state is unchanged.
+
+### Engineering latency measured: 9 November 2026
+
+The source-bound synthetic CPU benchmark is complete in
+`research/verification/residual_latency_20261109/`. Six workloads each use
+seven alternating-order batches of 200 full V1 predictions. The default-size
+32-entry/top-4/8-dimensional bank measured 124.2 to 173.9 microseconds per
+prediction; selecting all 32 measured 155.0 to 375.8 microseconds. Raw timing
+ranges and environmental limits are retained. Larger-bank results contain
+substantial shared-host noise and do not establish a speedup or acceptance target.
+The unchanged runtime/test suite passes 40 tests plus 78 subtests locally with
+warnings treated as errors. No scientific conclusion changes. Hosted verification
+and maintainer adoption are tracked in PR #10.
+
+### Exact reciprocal-weight correction: 9 November 2026
+
+The next prospective-prototype candidate closes the remaining premature weight
+underflow in PR #10. A small relative weight can round to zero before a large
+residual makes its contribution representable. We now form exact rational
+reciprocals of the admitted finite clamped distances, accumulate the convex
+mean exactly, and convert that mean to float once. Distance calculation, gain
+multiplication and baseline addition retain their float semantics.
+
+The complete engineering suite passes **45 tests and 146 subtests**. A separate
+AI reviewer reran it and checked 200 additional class evaluations against a
+high-precision independent reference. The default local timing case took about
+115 microseconds per prediction versus 108 for the parent. At top_k=128, this
+single-machine timing was about 2.42 ms versus 1.22 ms. These are descriptive
+artificial-input timings, not an efficacy or target-hardware benchmark.
+
+Details, measured overhead, exact source hashes and the preserved failing
+parent witness are in `research/EXACT_WEIGHT_RANGE_FIX_20261109.md` and
+`research/verification/exact_weights_20261109/`. This candidate is not merged.
+Hosted verification and maintainer integration remain open. The original APEN
+negative result and all scientific outcome records remain unchanged.
+
+
+### Integration of the two engineering candidates: 9 November 2026
+
+PR #11 now incorporates #10's verification commit while retaining the exact
+reciprocal runtime and full-range tests from `55cca70f1b1cdefb039ab72f7d65475c53476fc1`.
+The two earlier latency records remain distinct: the residual-mean record compares
+PR #10 with the old direct-dot implementation; the exact-weight record compares
+PR #11 with PR #10. Neither timing result is pooled or reassigned to another
+implementation. The historical residual-mean benchmark accepts an explicit pinned
+candidate source so it can be reproduced after the runtime has advanced.
+
+The combined workflow watches all tests, checks out the exact PR head, and runs
+`python -m pytest -q -W error tests/`, including `test_weight_range.py`.
+It retains standard-runner/read-only scope. The original skip-CI statement above
+describes the initial #11 commit; current-head hosted results are recorded in
+PR #11. Maintainer adoption is still separate from engineering validation. No
+scientific data, manuscript, training, merge to main or release is included.

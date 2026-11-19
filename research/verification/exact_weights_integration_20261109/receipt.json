@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-09",
+  "kind": "engineering_candidate_integration",
+  "runtime_preserved_from": "55cca70f1b1cdefb039ab72f7d65475c53476fc1",
+  "verification_work_imported_from": "f0cb5623fa234309894092addf82710679a0acc1",
+  "common_ancestor": "59bd5dfbe96980d3f4f365b604fec2b88b8caf6a",
+  "commit_parents": [
+    "55cca70f1b1cdefb039ab72f7d65475c53476fc1",
+    "f0cb5623fa234309894092addf82710679a0acc1"
+  ],
+  "source_sha256": {
+    "apen_event_residual/memory.py": "cf67e1229a60a13276b10c5beb4ec5ac6ebd2c988bb45573d6146faa1e57248e",
+    "apen_event_residual/causal_memory_v2.py": "1a2f1042395e1094719091cd119fffaf970d204d29debcf4ea433c77e0781134",
+    "tests/test_memory.py": "ba7e620f5a502e50d089d9bce4cf2b3815fb73d39e0153d3e2a323c5cdf27f0f",
+    "tests/test_memory_v2.py": "ca03df316d5dc9c40e021fea6b69b72cbf42baa0d83ebc7daf6e2e99d9db14e4",
+    "tests/test_weight_range.py": "6c180f9419d128e33da751385a32dc754d841e49917fb7db51f5b3cd90c79f94",
+    "research/benchmark_weight_range.py": "734933f7937bdb08ce4f1850551b73908379eef3efa793b6b626880b38f40a89"
+  },
+  "source_git_blobs": {
+    "apen_event_residual/memory.py": "be648b7fe0c1cff44a5e9fa622bea7ad7c5031d6",
+    "apen_event_residual/causal_memory_v2.py": "cc31eccb5fdfbba4893e1e624733f16458c2a39a",
+    "tests/test_memory.py": "c705a901071af3e5e1240365b6c5870ad2564e79",
+    "tests/test_memory_v2.py": "fdddc9ba14cf5cc39d809ef5affcb91bc0e9be0f",
+    "tests/test_weight_range.py": "9cdbc6fc72e46c818a4facb59ccc8b90801e5879",
+    "research/benchmark_weight_range.py": "e930e7040f7648aa607e514cb2466a92e9f56091"
+  },
+  "local_validation": {
+    "command": "python3 -m pytest -q -W error tests/",
+    "passed_tests": 45,
+    "passed_subtests": 146,
+    "failures": 0,
+    "elapsed_seconds": 0.27
+  },
+  "independent_ai_review": {
+    "reviewer": "/root/code_completion/apen11_review",
+    "source_edits": false,
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -W error -p no:cacheprovider tests/",
+    "passed_tests": 45,
+    "passed_subtests": 146,
+    "failures": 0,
+    "elapsed_seconds": 0.21,
+    "conclusion": "No integration blocker; exact #11 source retained, both benchmark comparisons separately attributed, complete exact-head CI configured."
+  },
+  "historical_benchmark_selector_checks": {
+    "explicit_pinned_PR10_source_and_old_baseline": "Accepted and script completed all six cases.",
+    "current_PR11_source_under_PR10_pin": "Rejected with Source identity mismatch.",
+    "reduced_run": "1 prediction per batch, 3 repetitions, zero warmup; CLI wiring check only. No performance conclusions or new timing record promoted."
+  },
+  "historical_provenance_caveat": {
+    "path": "apen_event_residual/causal_memory_v2.py",
+    "current_bytes": 3002,
+    "current_sha256": "1a2f1042395e1094719091cd119fffaf970d204d29debcf4ea433c77e0781134",
+    "old_review_sha256": "d7fdd1217bcd93253dd59ef03187e77934e7bed9ef4f09e941f173e436b986b9",
+    "explanation": "Old independent_review.json hash equals the same current source bytes plus exactly one trailing LF, 3003 bytes. Both reviewers verified this. Preserve historical receipt; current review/tests use the exact 3002-byte Git source."
+  },
+  "workflow": {
+    "trigger_paths_include": "tests/**",
+    "checkout": "github.event.pull_request.head.sha",
+    "command": "python -m pytest -q -W error tests/",
+    "permissions": "contents: read",
+    "runner": "ubuntu-24.04",
+    "timeout_minutes": 10
+  },
+  "hosted_status_at_commit_creation": "Final outcome is recorded in PR #11 after this exact head completes; no prior #10 pass is attributed to #11.",
+  "historical_measurements_unchanged": [
+    {
+      "path": "research/verification/residual_latency_20261109/latency.json",
+      "comparison": "PR10 rounded-relative-weight accumulation versus original direct dot"
+    },
+    {
+      "path": "research/verification/exact_weights_20261109/benchmark.json",
+      "comparison": "PR11 exact reciprocal weights versus PR10 rounded-relative-weight accumulation"
+    }
+  ],
+  "runtime_or_test_source_changed": false,
+  "scientific_experiment": false,
+  "main_moved": false,
+  "production_release": false,
+  "paid_compute_requested": false,
+  "remaining": "Maintainer adoption after final-head validation."
+}

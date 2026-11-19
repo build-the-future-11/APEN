@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-09",
+  "scope": "Artificial engineering fixtures only; no scientific outcome replay",
+  "base_commit": "d699da587f4a97dc3646154b4ed630fec3cb0567",
+  "earlier_candidate": "Global residual scaling superseded after independent review counterexamples; initial receipt/logs remain unchanged",
+  "change": "Exact Fraction accumulation of admitted float weights and residuals; one float rounding of convex mean",
+  "source_sha256": {
+    "apen_event_residual/memory.py": "adea226442b965d7bac2846e673438cb3f8527b11c767ef3269607e043116f25",
+    "tests/test_memory_v2.py": "adfe93741673b2b69ac2d732fb1090094eac227880bba0460ab7e13eec47f956",
+    "RESEARCH_STATE.md": "3e286d69f3a9a2df8a980e9f8110cb5cd12d80ea2da95778e804c40866579548",
+    "research/RESIDUAL_ACCUMULATION_FIX_20261109.md": "041f518af3427cab765b2d47f062bcebe0e6653a1189836029df46f00fed7255"
+  },
+  "new_review_regression_methods": 3,
+  "commands": [
+    {
+      "command": "python3 -m pytest -q -W error tests/test_memory_v2.py -k 'zero_weight_outlier or cancellation_does_not_underflow'",
+      "source": "initial scaled implementation plus two review regressions",
+      "exit_code": 1,
+      "pytest_summary": "5 failed, 1 passed, 28 deselected in 0.13s"
+    },
+    {
+      "command": "python3 -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py",
+      "source": "final exact-accumulation implementation",
+      "exit_code": 0,
+      "pytest_summary": "40 passed, 78 subtests passed in 0.11s"
+    }
+  ],
+  "independent_review": {
+    "reviewer": "Separate operations_completion AI agent",
+    "code_review": "No remaining source blocker found within admitted finite-float inputs",
+    "command": "python3 -m pytest -q -W error tests/test_memory.py tests/test_memory_v2.py",
+    "result": "40 passed, 78 subtests passed in 0.10s",
+    "reviewed_memory_sha256": "adea226442b965d7bac2846e673438cb3f8527b11c767ef3269607e043116f25",
+    "reviewed_tests_sha256": "adfe93741673b2b69ac2d732fb1090094eac227880bba0460ab7e13eec47f956",
+    "human_review": false
+  },
+  "logs": {
+    "review_before.log.gz": {
+      "uncompressed_bytes": 7066,
+      "uncompressed_sha256": "b15b562ab9e41bfa2667309d2fcf1e563a79311afdf3c05a55e695451553e516"
+    },
+    "final.log": {
+      "uncompressed_bytes": 113,
+      "uncompressed_sha256": "b0e053c40e5f6c2600cc176b243f9973210171c3e6b23a7150205c12a331914b"
+    }
+  },
+  "limits": [
+    "Initial relative-weight division can still underflow",
+    "Fraction CPU overhead not throughput-benchmarked",
+    "Final-head hosted verification not run",
+    "Maintainer review/integration remains open"
+  ],
+  "scientific_checkpoint_advanced": false,
+  "historical_evidence_changed": false,
+  "submitted_paper_changed": false,
+  "paid_compute": 0,
+  "new_experiments": 0
+}

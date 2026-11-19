@@ -8,6 +8,8 @@ not been evaluated on any scientific dataset or protected benchmark.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from fractions import Fraction
+from math import dist
 import numpy as np
 
 
@@ -91,22 +93,28 @@ class EpisodicResidualMemory:
         eligible = [r for r in self._records if r.available_at < t and r.observed_at < t]
         if not eligible:
             return Correction(float(baseline), float(baseline), 0.0, 0, 0, None)
-        # Deterministic nearest-neighbor selection, including equal-distance ties.
-        distances = [(float(np.linalg.norm(query - r.key)), r.available_at, r.insertion, r)
+        # A scaled Euclidean norm preserves finite very large distances and
+        # avoids turning tiny nonzero distances into false nearest-neighbor ties.
+        # Equal distances still use availability time and insertion order.
+        distances = [(dist(query, r.key), r.available_at, r.insertion, r)
                      for r in eligible]
         if not all(np.isfinite(d) for d, _, _, _ in distances):
             raise ValueError('nonfinite context distance')
         distances.sort(key=lambda x: (x[0], x[1], x[2]))
         chosen = distances[:self.top_k]
-        # Cancel a common inverse-distance factor before normalization. Taking
-        # reciprocals first can overflow, or their sum can overflow to infinity
-        # and silently erase a finite residual correction. Relative weights are
-        # bounded by one and at least one is exactly one.
-        denominators = np.asarray([max(d, self.eps) for d, _, _, _ in chosen], dtype=float)
-        with np.errstate(under='ignore'):
-            weights = denominators.min() / denominators
-        weights /= weights.sum()
-        learned_residual = float(weights @ np.asarray([r.residual for _, _, _, r in chosen]))
+        # Form inverse-distance weights as exact rational reciprocals of the
+        # admitted float distances. Float reciprocals can overflow; even the
+        # bounded ratio min(distance)/distance can underflow to zero before a
+        # large residual makes its contribution representable. Preserve those
+        # contributions, cancellation and finite convex means, then round the
+        # mean once. Distances, gain multiplication and baseline addition still
+        # use float arithmetic. Rational denominators add CPU cost as top_k grows.
+        weighted = [(1 / Fraction.from_float(max(d, self.eps)),
+                     Fraction.from_float(r.residual))
+                    for d, _, _, r in chosen]
+        denominator = sum(w for w, _ in weighted)
+        numerator = sum(w * r for w, r in weighted)
+        learned_residual = float(numerator / denominator)
         amount = self.gain * learned_residual
         prediction = float(baseline) + amount
         if not np.isfinite(prediction):
@@ -117,3 +125,4 @@ class EpisodicResidualMemory:
     @property
     def size(self) -> int:
         return len(self._records)
+

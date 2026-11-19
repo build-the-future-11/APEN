@@ -1,0 +1,39 @@
+{
+  "independent_random_cases": 100,
+  "class_evaluations": 200,
+  "reference": "2200-digit Decimal reciprocal weights, selected one-dimensional distances; seeded independently of repository tests",
+  "all_matched": true,
+  "old_relative_weight_witness": 0.0,
+  "corrected_witness": 1e-100,
+  "scope": "Artificial arithmetic and selection checks only; no forecasting efficacy, scientific benchmark, runtime or human-review claim.",
+  "reviewer": "Separate AI agent: /root/program_operations",
+  "reviewed_local_source_root": "/workspace/scratch/bbe167ec4910/apen_work",
+  "suite_command": "python -m pytest -q -W error",
+  "suite_result": {
+    "passed_tests": 45,
+    "passed_subtests": 146,
+    "failures": 0
+  },
+  "source_sha256": {
+    "apen_event_residual/memory.py": "cf67e1229a60a13276b10c5beb4ec5ac6ebd2c988bb45573d6146faa1e57248e",
+    "tests/test_weight_range.py": "6c180f9419d128e33da751385a32dc754d841e49917fb7db51f5b3cd90c79f94",
+    "tests/test_memory_v2.py": "ca03df316d5dc9c40e021fea6b69b72cbf42baa0d83ebc7daf6e2e99d9db14e4",
+    "apen_event_residual/causal_memory_v2.py": "d7fdd1217bcd93253dd59ef03187e77934e7bed9ef4f09e941f173e436b986b9"
+  },
+  "conclusion": "No blocking correctness issue found in the scoped finite-binary64 inverse-distance mean repair.",
+  "mathematical_review": [
+    "For every chosen admitted distance d, max(d, eps) is positive and finite; its exact reciprocal is positive.",
+    "The rational denominator is positive and the exact weighted mean lies in the finite residual convex hull, so converting that mean to float cannot overflow.",
+    "Unlike float relative weights, exact reciprocals preserve tiny weights whose products with large residuals remain representable.",
+    "FIFO, top-k selection, timestamp eligibility, availability/insertion tie breaks, and V2 successful-operation clock updates are structurally unchanged."
+  ],
+  "boundaries": [
+    "Distance evaluation, gain multiplication and baseline addition remain float operations; this is not one-rounding exact arithmetic for the entire final forecast.",
+    "True nonfinite distance or final forecast remains rejected.",
+    "Rational denominator growth adds runtime cost; no throughput conclusion was independently measured by this reviewer.",
+    "Artificial arithmetic checks do not establish forecasting benefit, historical APEN reproduction, scientific peer review, merge or release."
+  ],
+  "documentation_followup": "Root notified that README must include new tests/test_weight_range.py in normal suite command and prior current/final rounded-weight claims must receive explicit superseding documentation. Root confirmed it will make those updates.",
+  "source_provenance_limit": "Local working directory has no .git metadata. This review binds tested bytes by SHA-256; parent owns repository base/head provenance.",
+  "source_edits_by_reviewer": false
+}
